@@ -1,6 +1,5 @@
 import numpy as np
 from scipy.spatial import distance
-from gensim.models import KeyedVectors
 from gensim.models import Word2Vec
 
 class W2VResumeFilter:
@@ -19,7 +18,7 @@ class W2VResumeFilter:
         if debiased:
             self.model = Word2Vec.load_word2vec_format(W2VResumeFilter.HD_W2V_PATH, binary=True)
         else:
-            self.model = KeyedVectors.load_word2vec_format(W2VResumeFilter.W2V_PATH, binary=True)
+            self.model = Word2Vec.load_word2vec_format(W2VResumeFilter.W2V_PATH, binary=True)
 
     def get_word_centroid_vec(self, doc):
         """ Convert the document to a vector using the word centroid method """
@@ -70,7 +69,7 @@ class W2VResumeFilter:
 
 def main():
     """ Main method """
-    w2vrf = W2VResumeFilter(debiased=True)
+    w2vrf = W2VResumeFilter(debiased=False)
 
 if __name__ == "__main__":
     print("# -- Main -- #")
