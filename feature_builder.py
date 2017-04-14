@@ -46,3 +46,5 @@ def construct_candidate_skills(resume_data):
 			is_in_tech_major, has_worked_in_tech,
 			has_work_experience, has_english_skills,
 			has_oracle_skills]
+
+# TODO: Add "load_alotaibi_users, load_alotaibi_jobs"
