@@ -1,5 +1,6 @@
+import numpy as np
 from rf_word2vec import W2VResumeFilter
-from feature_builder import construct_candidate_skills, load_alotaibi_users, load_alotaibi_jobs
+# from feature_builder import construct_candidate_skills, load_alotaibi_users, load_alotaibi_jobs
 
 def al_otaibi_resume_filter():
     """ Al Otaibi method """
@@ -44,11 +45,11 @@ def al_otaibi_resume_filter():
     np.savetxt("jaccard_ranks.csv", c, delimiter=",")
 
 
-def w2v_resume_filter():
+def w2v_resume_filter(debiased=False):
     """ W2V method """
 
-    print("# -- Word  -- #")
-    w2vrf = W2VResumeFilter(debiased=False)
+    print("# -- Word2Vec -- #")
+    w2vrf = W2VResumeFilter(debiased=debiased)
     print("Loaded models")
 
     # Load users
@@ -80,16 +81,17 @@ def w2v_resume_filter():
         jaccard_job_ranks.append(ranks)
         print("jaccard:", ranks)
 
-    a = np.asarray(cosine_job_ranks)
-    b = np.asarray(euclidean_job_ranks)
-    c = np.asarray(jaccard_job_ranks)
-    np.savetxt("cosine_ranks.csv", a, delimiter=",")
-    np.savetxt("euclidean_ranks.csv", b, delimiter=",")
-    np.savetxt("jaccard_ranks.csv", c, delimiter=",")
+    a = np.asarray(cosine_job_ranks, dtype=int)
+    b = np.asarray(euclidean_job_ranks, dtype=int)
+    c = np.asarray(jaccard_job_ranks, dtype=int)
+    np.savetxt(str(debiased) + "_cosine_ranks.csv", a, delimiter=",")
+    np.savetxt(str(debiased) + "_euclidean_ranks.csv", b, delimiter=",")
+    np.savetxt(str(debiased) + "_jaccard_ranks.csv", c, delimiter=",")
 
 def main():
     """ Main method """
-    w2v_resume_filter()
+    w2v_resume_filter(debiased=False)
+    w2v_resume_filter(debiased=True)
 
 if __name__ == "__main__":
     main()
