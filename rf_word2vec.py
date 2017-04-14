@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.spatial import distance
 from gensim.models import KeyedVectors
+from gensim.models import Word2Vec
 
 class W2VResumeFilter:
     """
@@ -16,7 +17,7 @@ class W2VResumeFilter:
     def __init__(self, debiased=False):
         """ Constructor """
         if debiased:
-            self.model = KeyedVectors.load_word2vec_format(W2VResumeFilter.HD_W2V_PATH, binary=True)
+            self.model = Word2Vec.load_word2vec_format(W2VResumeFilter.HD_W2V_PATH, binary=True)
         else:
             self.model = KeyedVectors.load_word2vec_format(W2VResumeFilter.W2V_PATH, binary=True)
 
@@ -67,8 +68,10 @@ class W2VResumeFilter:
 
         return ranks
 
-if __name__ == "__main__":
-    from rf_word2vec import W2VResumeFilter
-    print("here")
+def main():
+    """ Main method """
     w2vrf = W2VResumeFilter(debiased=True)
+
+if __name__ == "__main__":
+    print("# -- Main -- #")
     
