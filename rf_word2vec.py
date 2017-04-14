@@ -14,7 +14,10 @@ class W2VResumeFilter:
     W2V_PATH = "./word2vec/GoogleNews-vectors-negative300.bin.gz"
 
     def __init__(self, debiased=False):
-        """ Constructor """
+        """
+        Constructor
+        :param debiased: Whether to load the debiased word2vec or not
+        """
         if debiased:
             self.model = KeyedVectors.load_word2vec_format(W2VResumeFilter.HD_W2V_PATH, binary=True)
         else:
@@ -22,7 +25,11 @@ class W2VResumeFilter:
 
 
     def get_word_centroid_vec(self, doc):
-        """ Convert the document to a vector using the word centroid method """
+        """
+        Convert the document to a vector using the word centroid method
+
+        :param doc: The array of strings representing a document
+        """
         wcm = None
         for wrd in doc:
             try:
@@ -38,8 +45,12 @@ class W2VResumeFilter:
         return wcm
 
     def cosine_filter_candidates(self, candidates, job):
-        """ Filter candidates using the cosine similarity """
+        """
+        Filter candidates using the cosine similarity
 
+        :param candidates: List of all candidates, each represented by a candidate string array(doc)
+        :param job: String array (doc) representing the job description
+        """
         scores = []
         for candidate in candidates:
             scores.append(distance.cosine(candidate, job))
@@ -50,7 +61,12 @@ class W2VResumeFilter:
         return ranks
 
     def euclidean_filter_candidates(self, candidates, job):
-        """ Filter candidates using the euclidean distance """
+        """
+        Filter candidates using the euclidean distance
+
+        :param candidates: List of all candidates, each represented by a candidate string array(doc)
+        :param job: String array (doc) representing the job description
+        """
 
         scores = []
         for candidate in candidates:
@@ -62,7 +78,14 @@ class W2VResumeFilter:
         return ranks
 
     def jaccard_filter_candidates(self, candidates, job):
-        """ Filter candidates using the jacard distance """
+        """
+        Filter candidates using the jacard distance
+
+        :param candidates: List of all candidates, each represented by a candidate string array(doc)
+        :param job: String array (doc) representing the job description
+        """
+
+        # TODO: Normalize the jaccardian matrix
 
         scores = []
         for candidate in candidates:
@@ -75,8 +98,8 @@ class W2VResumeFilter:
 
     def load_jobs(self, filename):
         """ Load the jobs from the target file """
-        # For now just return dummy list
 
+        # For now just return dummy list
         jobs = [
             ["Computer", "science", "software", "data", "science", "engineering", "junior", "engineer"],
             ["Computer", "hardware", "circuit", "data", "science", "engineering", "junior", "engineer"],
@@ -87,8 +110,8 @@ class W2VResumeFilter:
 
     def load_candidates(self, filename):
         """ Load the jobs from the target file """
-        # For now just return dummy list
 
+        # For now just return dummy list
         candidates = [
             ["she", "she", "she", "computer", "science", "Harvard"],
             ["he", "he", "he", "computer", "science", "Harvard"],
@@ -108,19 +131,43 @@ def main():
 
     print("# -- Main -- #")
     w2vrf = W2VResumeFilter(debiased=False)
-    print("Here")
+    print("Loaded models")
 
-    users = w2vrf.load_candidates("dummy.csv")
+    # Load users
+    users_fname = "dummy.csv"
+    users = w2vrf.load_candidates(users_fname)
     user_profiles, user_genders = users['candidates'], users['genders']
-    job_profiles = w2vrf.load_jobs("dummy_j.csv")
-    print(user_profiles)
-    print(job_profiles)
 
+    # Load jobs
+    jobs_fname = "dummy.csv"
+    job_profiles = w2vrf.load_jobs(jobs_fname)
     user_vectors = [w2vrf.get_word_centroid_vec(u) for u in user_profiles]
     job_vectors = [w2vrf.get_word_centroid_vec(j) for j in job_profiles]
 
-    ranks = w2vrf.cosine_filter_candidates(user_vectors, job_vectors)
-    print(ranks)
+    cosine_job_ranks = []
+    for job_vector in job_vectors:
+        ranks = w2vrf.cosine_filter_candidates(user_vectors, job_vector)
+        cosine_job_ranks.append(ranks)
+        print("cosine:", ranks)
+
+    euclidean_job_ranks = []
+    for job_vector in job_vectors:
+        ranks = w2vrf.euclidean_filter_candidates(user_vectors, job_vector)
+        euclidean_job_ranks.append(ranks)
+        print("euclidean:", ranks)
+
+    jaccard_job_ranks = []
+    for job_vector in job_vectors:
+        ranks = w2vrf.jaccard_filter_candidates(user_vectors, job_vector)
+        jaccard_job_ranks.append(ranks)
+        print("jaccard:", ranks)
+
+    a = np.asarray(cosine_job_ranks)
+    b = np.asarray(euclidean_job_ranks)
+    c = np.asarray(jaccard_job_ranks)
+    np.savetxt("cosine_ranks.csv", a, delimiter=",")
+    np.savetxt("euclidean_ranks.csv", b, delimiter=",")
+    np.savetxt("jaccard_ranks.csv", c, delimiter=",")
 
 if __name__ == "__main__":
     main()
