@@ -1,3 +1,5 @@
+from scrape_data import scrape_from_all_pages
+
 def has_masters(resume_data):
 	# masters_keyword = 'MSc'
 	# if masters_keyword not in resume_data:
@@ -10,7 +12,9 @@ def has_bachelors(resume_data):
 	# if bachelors_keyword not in resume_data:
 	# 	return 0
 	# return 1
-	return resume_dta["BSc"]
+	if resume_data["MSC"] == 0:
+		return 1 # since a bachelors is required in the paper
+	return resume_data["BSc"]
 
 def is_in_tech_major(resume_data):
 	# tech_keywords = ['Software Engineering', 'Computer Programming', 'IT']
@@ -46,5 +50,11 @@ def construct_candidate_skills(resume_data):
 			is_in_tech_major, has_worked_in_tech,
 			has_work_experience, has_english_skills,
 			has_oracle_skills]
+
+
+candidates = scrape_from_all_pages()
+for candidate in candidates:	
+	vector = construct_candidate_skills(candidate)
+	print vector
 
 # TODO: Add "load_alotaibi_users, load_alotaibi_jobs"
