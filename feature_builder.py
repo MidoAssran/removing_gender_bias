@@ -38,6 +38,16 @@ def has_english_skills(resume_data):
 def has_oracle_skills(resume_data):
 	return resume_data['oracle_skills']
 
+# def get_name(resume_data):
+# 	return resume_data['name']
+
+def get_gender(resume_data):
+	return resume_data['gender']
+
+def get_personal_info(resume_data):
+	return resume_data['personal_info']
+
+
 def construct_candidate_skills(resume_data):
 	masters = has_masters(resume_data)
 	bachelors = has_bachelors(resume_data)
@@ -46,15 +56,11 @@ def construct_candidate_skills(resume_data):
 	work_experience = has_work_experience(resume_data)
 	english_skills = has_english_skills(resume_data)
 	oracle_skills = has_oracle_skills(resume_data)
-	return [masters, bachelors,
-			tech_major, worked_in_tech,
-			work_experience, english_skills,
-			oracle_skills]
-
+	candidate_info = [masters,bachelors, tech_major, worked_in_tech, work_experience,english_skills, oracle_skills, get_gender(resume_data)]
+	return candidate_info + get_personal_info(resume_data)
 
 candidates = scrape_from_all_pages()
 for candidate in candidates:	
 	vector = construct_candidate_skills(candidate)
 	print vector
-
 # TODO: Add "load_alotaibi_users, load_alotaibi_jobs"

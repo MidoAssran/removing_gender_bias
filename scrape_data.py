@@ -1,9 +1,48 @@
 from bs4 import BeautifulSoup
 from random import randint
+import sexmachine.detector as gender
 import urllib2
+import unicodedata
 
 base_url = "http://www.indeed.com/resumes/data-science?q=data+science&co=CA"
 NUMBER_OF_LISTINGS = 1000 # modify this value to get more data
+
+d = gender.Detector()
+
+def get_gender():
+	# gender = d.get_gender(name)
+	# gender_string = unicodedata.normalize('NFKD',gender).encode('ascii','ignore')
+	# if gender_string == 'mostly_female' or gender_string == 'andy':
+	# 	return 'female'
+	# if gender_string == 'mostly_male':
+	# 	return 'male'
+	# return gender_string
+	random_int = randint(0,1)
+	if random_int == 0:
+		return 'female'
+	return 'male'
+
+male_keywords = ['He', 'he', 'his', 'man', 'men', 'spokesman', 'himself', 'son',
+				'father', 'chairman', 'husband', 'guy', 'boy', 'king', 'Chairman', 'male', 'Man','lions',
+				'brothers', 'dad', 'sons', 'kings', 'Men', 'Bulls', 'boyfriend', 'Sir', 'King',
+				'businessman', 'Boys', 'grandfather', 'Father', 'uncle', 'Councilman', 'Boy', 'males',
+				'guy', 'congressman', 'dad', 'bull', 'businessmen', 'nephew', 'congressmen', 'prostate_cancer',
+				'fathers', 'younger_brother', 'dude', 'Dude']
+
+female_keywords = ['her', 'she', 'She', 'woman', 'women', 'wife',
+					'mother', 'daughter', 'girls', 'girl', 'spokeswoman',
+					'female', 'Women', 'herself', 'lady', 'actress', 'mom',
+					'girlfriend', 'daughters', 'queen', 'Lady', 'sisters',
+					'mothers', 'grandmother', 'Woman', 'cousin', 'Ladies', 'Girls', 
+					'mum', 'Girl', 'Queens', 'queen', 'wives', 'widow', 'bride',
+					'aunt', 'lesbian', 'chariwoman', 'maiden', 'princess', 'niece',
+					'hers', 'filly', 'Actress']
+
+def get_personal_info(candidate_data):
+	if(candidate_data['gender'] == 'male'):
+		return male_keywords
+	if(candidate_data['gender'] == 'female'):
+		return female_keywords
 
 def scrape_from_all_pages():
 	json = {}
@@ -46,6 +85,15 @@ def scrape_data(results):
 	    # Has oracle skill
 	    json_data['oracle_skills'] = randint(0,1)
 
+	    # Get name
+	    # name = x.find('div', attrs={'class': "app_name"})
+	    # json_data['name'] = name
+	    # print name
+
+		# Get gender
+	    json_data['gender'] = get_gender()
+
+	    json_data['personal_info'] = get_personal_info(json_data)
 	    return json_data
 
 def has_bachelors(education):
