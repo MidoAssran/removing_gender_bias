@@ -1,4 +1,5 @@
 from scrape_data import scrape_from_all_pages
+import numpy as np
 
 def has_masters(resume_data):
 	# masters_keyword = 'MSc'
@@ -60,7 +61,13 @@ def construct_candidate_skills(resume_data):
 	return candidate_info + get_personal_info(resume_data)
 
 candidates = scrape_from_all_pages()
+candidates_list = []
 for candidate in candidates:	
 	vector = construct_candidate_skills(candidate)
-	print vector
+	candidates_list.append(vector)
+
+def write_to_csv(fileName, candidates):
+	np.savetxt(fileName, np.asarray(candidates), delimiter=",", fmt="%s")
+
+write_to_csv('user_profiles.csv', candidates_list)
 # TODO: Add "load_alotaibi_users, load_alotaibi_jobs"

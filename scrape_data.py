@@ -5,7 +5,7 @@ import urllib2
 import unicodedata
 
 base_url = "http://www.indeed.com/resumes/data-science?q=data+science&co=CA"
-NUMBER_OF_LISTINGS = 1000 # modify this value to get more data
+NUMBER_OF_LISTINGS = 100 # modify this value to get more data
 
 d = gender.Detector()
 
@@ -27,7 +27,7 @@ male_keywords = ['He', 'he', 'his', 'man', 'men', 'spokesman', 'himself', 'son',
 				'brothers', 'dad', 'sons', 'kings', 'Men', 'Bulls', 'boyfriend', 'Sir', 'King',
 				'businessman', 'Boys', 'grandfather', 'Father', 'uncle', 'Councilman', 'Boy', 'males',
 				'guy', 'congressman', 'dad', 'bull', 'businessmen', 'nephew', 'congressmen', 'prostate_cancer',
-				'fathers', 'younger_brother', 'dude', 'Dude']
+				'fathers']
 
 female_keywords = ['her', 'she', 'She', 'woman', 'women', 'wife',
 					'mother', 'daughter', 'girls', 'girl', 'spokeswoman',
