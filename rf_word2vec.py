@@ -1,3 +1,4 @@
+import collections
 import numpy as np
 from scipy.spatial import distance
 from gensim.models import KeyedVectors
@@ -48,14 +49,14 @@ class W2VResumeFilter:
         """
         Filter candidates using the cosine similarity
 
-        :param candidates: List of all candidates, each represented by a candidate string array(doc)
-        :param job: String array (doc) representing the job description
+        :param candidates: List of all candidates, each represented by a candidate vector (doc)
+        :param job: Vector (doc) representing the job description
         """
         scores = []
         for candidate in candidates:
             scores.append(distance.cosine(candidate, job))
 
-        # Index list of best candidates sorted in descending order
+        # Index list of best candidates sorted by descending angle
         ranks = sorted(range(len(scores)), key=lambda k: scores[k], reverse=True)
 
         return ranks
@@ -64,15 +65,15 @@ class W2VResumeFilter:
         """
         Filter candidates using the euclidean distance
 
-        :param candidates: List of all candidates, each represented by a candidate string array(doc)
-        :param job: String array (doc) representing the job description
+        :param candidates: List of all candidates, each represented by a candidate vector (doc)
+        :param job: Vector (doc) representing the job description
         """
 
         scores = []
         for candidate in candidates:
             scores.append(distance.euclidean(candidate, job))
 
-        # Index list of best candidates sorted (best first)
+        # Index list of best candidates sorted by ascending distance
         ranks = sorted(range(len(scores)), key=lambda k: scores[k], reverse=False)
 
         return ranks
@@ -84,15 +85,19 @@ class W2VResumeFilter:
         :param candidates: List of all candidates, each represented by a candidate string array(doc)
         :param job: String array (doc) representing the job description
         """
-
-        # TODO: Normalize the jaccardian matrix
+        jb = collections.Counter(job)
 
         scores = []
         for candidate in candidates:
-            scores.append(distance.jaccard(candidate, job))
+            cnd = collections.Counter(candidate)
 
-        # Index list of best candidates sorted (best first)
-        ranks = sorted(range(len(scores)), key=lambda k: scores[k], reverse=False)
+            intersection = cnd & jb
+            union = cnd | jb
+            score = len(list(intersection.elements())) / len(list(union.elements()))
+            scores.append(score)
+
+        # Index list of best candidates sorted by descending jaccard score
+        ranks = sorted(range(len(scores)), key=lambda k: scores[k], reverse=True)
 
         return ranks
 
