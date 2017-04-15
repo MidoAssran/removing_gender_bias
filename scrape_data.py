@@ -3,19 +3,19 @@ from random import randint
 import urllib2
 
 base_url = "http://www.indeed.com/resumes/data-science?q=data+science&co=CA"
+NUMBER_OF_LISTINGS = 1000 # modify this value to get more data
 
 def scrape_from_all_pages():
 	json = {}
 	list_to_return = []
 	i = 0
 	increment_page = '&start=' + str(i)
-	while(i<1000000):
+	while(i<NUMBER_OF_LISTINGS):
 		url_to_pass = base_url + increment_page
 		increment_page = '&start=' + str(i)
 		soup = BeautifulSoup(urllib2.urlopen(base_url+increment_page).read(), 'html.parser')
 		results = soup.find_all('li', attrs={'data-tn-component': 'resume-search-result'})
 		json = scrape_data(results)
-		print json
 		i = i + 50
 		list_to_return.append(json)
 	return list_to_return
