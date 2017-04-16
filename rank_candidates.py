@@ -13,12 +13,13 @@ def al_otaibi_resume_filter(users_fname, jobs_fname):
     user_genders = users['genders']
     user_profiles = []
     for user in users['candidates']:
-        user_profiles.append(user[:8])
-    user_vectors = user_profiles
+        user_profiles.append(user[:7])
+    user_vectors = [[int(u) for u in user] for user in user_profiles]
 
     # Load jobs
     job_profiles = w2vrf.load_jobs(jobs_fname)
-    job_vectors = [w2vrf.get_word_centroid_vec(j) for j in job_profiles]
+    # job_vectors = [w2vrf.get_word_centroid_vec(j) for j in job_profiles]
+    job_vectors = [np.ones(7) for j in job_profiles]
 
 
     cosine_job_ranks = []
@@ -39,18 +40,18 @@ def al_otaibi_resume_filter(users_fname, jobs_fname):
         jaccard_job_ranks.append(ranks)
         print("jaccard:", ranks)
 
-    # a = np.asarray(cosine_job_ranks, dtype=int)
-    ag = [user_genders[i] for i in cosine_job_ranks]
-    # b = np.asarray(euclidean_job_ranks, dtype=int)
-    bg = [user_genders[i] for i in euclidean_job_ranks]
-    # c = np.asarray(jaccard_job_ranks, dtype=int)
-    cg = [user_genders[i] for i in jaccard_job_ranks]
-    np.savetxt("./data/" + str(debiased) + "_cosine_genders.csv", ag, delimiter=",")
-    np.savetxt("./data/" + str(debiased) + "_euclidean_genders.csv", bg, delimiter=",")
-    np.savetxt("./data/" + str(debiased) + "_jaccard_genders.csv", cg, delimiter=",")
-    np.savetxt("./data/" + str(debiased) + "_cosine_ranks.csv", a, delimiter=",", fmt="%s")
-    np.savetxt("./data/" + str(debiased) + "_euclidean_ranks.csv", b, delimiter=",", fmt="%s")
-    np.savetxt("./data/" + str(debiased) + "_jaccard_ranks.csv", c, delimiter=",", fmt="%s")
+    a = np.asarray(cosine_job_ranks, dtype=int)
+    ag = [[user_genders[i] for i in job_rank] for job_rank in cosine_job_ranks]
+    b = np.asarray(euclidean_job_ranks, dtype=int)
+    bg = [[user_genders[i] for i in job_rank] for job_rank in euclidean_job_ranks]
+    c = np.asarray(jaccard_job_ranks, dtype=int)
+    cg = [[user_genders[i] for i in job_rank] for job_rank in jaccard_job_ranks]
+    np.savetxt("./data/_cosine_genders_alotaibi.csv", ag, delimiter=",", fmt="%s")
+    np.savetxt("./data/_euclidean_genders_alotaibi.csv", bg, delimiter=",", fmt="%s")
+    np.savetxt("./data/_jaccard_genders_alotaibi.csv", cg, delimiter=",", fmt="%s")
+    np.savetxt("./data/_cosine_ranks_alotaibi.csv", a, delimiter=",", fmt="%s")
+    np.savetxt("./data/_euclidean_ranks_alotaibi.csv", b, delimiter=",", fmt="%s")
+    np.savetxt("./data/_jaccard_ranks_alotaibi.csv", c, delimiter=",", fmt="%s")
 
 
 def w2v_resume_filter(users_fname, jobs_fname, debiased=False):
@@ -109,9 +110,9 @@ def main():
     """ Main method """
     user_fname = "user_profiles.csv"
     jobs_fname = "job_descriptions.csv"
-    w2v_resume_filter(users_fname=user_fname, jobs_fname=jobs_fname, debiased=False)
-    w2v_resume_filter(users_fname=user_fname, jobs_fname=jobs_fname, debiased=True)
-
+    # w2v_resume_filter(users_fname=user_fname, jobs_fname=jobs_fname, debiased=False)
+    # w2v_resume_filter(users_fname=user_fname, jobs_fname=jobs_fname, debiased=True)
+    al_otaibi_resume_filter(user_fname, jobs_fname)
 
 if __name__ == "__main__":
     main()
