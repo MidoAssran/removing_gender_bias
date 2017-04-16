@@ -1,2 +1,5 @@
 .bin
 .pyc
+__pycache__
+word2vec
+.ipynb_checkpoints
