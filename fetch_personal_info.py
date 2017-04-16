@@ -37,19 +37,22 @@ def get_personal_info(gender):
 		         female_keywords[fourth_rand_int]]
 
 def get_technical_keywords(technical_keywords):
-	return random.sample(technical_keywords,5)
-
+	random.shuffle(technical_keywords)
+	# print(technical_keywords)
+	s = random.sample(technical_keywords, 7)
+	return s
 def write_to_csv(fileName, candidates):
 	with open(fileName, 'a') as file_handle:
 		np.savetxt(file_handle, np.asarray(candidates), delimiter=",", fmt="%s")
 
+
 technical_keywords = []
 
-with open('job_descriptions.csv', 'rb') as f:
-    reader = csv.reader(f)
-    technical_keywords = list(reader)
-    technical_keywords = get_technical_keywords(list(itertools.chain.from_iterable(technical_keywords)))
-    
+f = open("job_descriptions.csv", 'r')
+reader = csv.reader(f)
+for row in reader:
+	technical_keywords += row
+
 updated_user_profiles = []
 with open('user_profiles.csv', 'rb') as f:
 	reader = csv.reader(f)

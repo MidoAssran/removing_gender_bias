@@ -92,7 +92,6 @@ class W2VResumeFilter:
         scores = []
         for candidate in candidates:
             cnd = collections.Counter(candidate)
-
             intersection = cnd & jb
             union = cnd | jb
             score = len(list(intersection.elements())) / len(list(union.elements()))
@@ -199,7 +198,21 @@ def main():
 
 if __name__ == "__main__":
     # main()
-    w = W2VResumeFilter(debiased=False, initialize=False)
-    # a = w.load_candidates("user_profiles.csv")
-    b = w.load_jobs("job_descriptions.csv")
-    print(b)
+    w2vrf = W2VResumeFilter(debiased=False, initialize=False)
+    # a = w2vrf.load_candidates("updated_user_profiles.csv")
+    # b = w2vrf.load_jobs("job_descriptions.csv")
+
+    users = w2vrf.load_candidates("updated_user_profiles.csv")
+    user_genders = users['genders']
+    user_profiles = []
+    for user in users['candidates']:
+        if len(user_profiles) == 10:
+            break
+        user_profiles.append(user[7:])
+
+    job_profiles = w2vrf.load_jobs("job_descriptions.csv")
+    jaccard_job_ranks = []
+    for job_string in job_profiles:
+        ranks = w2vrf.jaccard_filter_candidates(user_profiles, job_string)
+        jaccard_job_ranks.append(ranks)
+        print("jaccard:", ranks)
