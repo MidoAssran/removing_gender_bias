@@ -37,10 +37,15 @@ def mf_ratio(method,gender,n):
       return np.average(ratios), np.average(ratios_d)
 
 def get_ratios(n):
-  print ("n : ",n)
-  print ("cosine : ", mf_ratio("cosine", 1, n) )
-  print ( "jaccard : ", mf_ratio("jaccard", 1, n) )
-  print ( "euclidean : ", mf_ratio("euclidean", 1, n) )
+  #print ("n : ",n)
+  cos = ("cosine : ", mf_ratio("cosine", 1, n) )
+  jac = ( "jaccard : ", mf_ratio("jaccard", 1, n) )
+  euc = ( "euclidean : ", mf_ratio("euclidean", 1, n) )
+  #print (cos)
+  #print (jac)
+  #print (euc)
+  return cos, jac, euc
+  
 
 def plot(method):
   n = np.arange(1,101)*100
@@ -64,9 +69,33 @@ def plot(method):
   plt.xlabel('n')
   plt.show()
 
-#def histogram():
+def barchart():
+  cosine, jaccard, euclidean = get_ratios(800)
+  print (cosine[1][0])
+  print (jaccard[1])
+
+  male = (cosine[1][0], jaccard[1][0], euclidean[1][0], cosine[1][1], jaccard[1][1], euclidean[1][1])
+  female = (1-cosine[1][0], 1-jaccard[1][0], 1-euclidean[1][0],1-cosine[1][1], 1-jaccard[1][1], 1-euclidean[1][1])
+
+  n = [1,2,3,4,5,6]
+  np1 = [0.825,1.825,2.825,3.825,4.825,5.825]
+  np2 = [1.175,2.175,3.175,4.175,5.175, 6.175]
+
+  width = 0.35
+  p1 = plt.bar(np1,male, width, color='#7a9eea')
+  p2 = plt.bar(np2,female, width, color='#d62728')
+
+  plt.ylabel('Percentage')
+  plt.title('Scores by Method by Gender')
+  plt.xticks(n, ('CosB', 'JaccB', 'EucliB', 'CosDB', 'JaccDB', 'EucliDB'))
+  #plt.legend((male[0], female[0]), ('Men', 'Women'))
+  plt.show()
+
+   
+
   
 if __name__ == "__main__":
   #n = 3000
   #get_ratios(n)
-  plot ("cosine")
+  #plot ("cosine")
+  barchart()
