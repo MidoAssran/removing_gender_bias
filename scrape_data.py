@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import copy
+import numpy as np
 from random import randint
 import sexmachine.detector as gender
 import urllib2
@@ -9,6 +10,37 @@ base_url = "https://www.indeed.com/resumes?q=software&l=victoria"
 NUMBER_OF_LISTINGS = 10000 # modify this value to get more data
 
 # d = gender.Detector()
+
+def write_to_csv(fileName, candidates):
+	with open(fileName, 'a') as file_handle:
+		np.savetxt(file_handle, np.asarray(candidates), delimiter=",", fmt="%s")
+
+def get_job_titles(results):
+	job_titles = []
+	for x in results:
+		job_title = x.find('a', attrs={'data-tn-element': "jobTitle"})
+		job_titles.append(unicodedata.normalize('NFKD',job_title.text.strip()).encode('ascii','ignore').split(' '))
+	return job_titles
+
+def get_job_description():
+	list_to_return = []
+	i = 0
+	url = "https://ca.indeed.com/jobs?q=data+science&l=Toronto,+ON"
+
+	while(i<1000):
+		increment_page = '&co=CA&start=' + str(i)
+		url_to_pass = url + increment_page
+		try:
+			soup = BeautifulSoup(urllib2.urlopen(url_to_pass).read(), 'html.parser')
+		except:
+			return list_to_return
+		results = soup.find_all('div', attrs={'class': 'row result'})
+		list_titles = get_job_titles(results)
+		write_to_csv('job_descriptions.csv', list_titles)
+		i = i + 10
+
+get_job_description()
+#write_to_csv('job_descriptions.csv', results)
 
 def get_gender():
 	# gender = d.get_gender(name)
