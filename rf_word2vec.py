@@ -1,4 +1,5 @@
 import collections
+import csv
 import numpy as np
 from scipy.spatial import distance
 from gensim.models import KeyedVectors
@@ -105,12 +106,14 @@ class W2VResumeFilter:
     def load_jobs(self, filename):
         """ Load the jobs from the target file """
 
-        # For now just return dummy list
-        jobs = [
-            ["Computer", "science", "software", "data", "science", "engineering", "junior", "engineer"],
-            ["Computer", "hardware", "circuit", "data", "science", "engineering", "junior", "engineer"],
-            ["Computer", "hardware", "electrical", "data", "science", "engineering", "junior", "engineer"]
-        ]
+        jobs = []
+
+        f = open(filename, 'r')
+        reader = csv.reader(f)
+        for row in reader:
+            jobs.append(row)
+
+        f.close()
 
         return jobs
 
@@ -197,4 +200,6 @@ def main():
 if __name__ == "__main__":
     # main()
     w = W2VResumeFilter(debiased=False, initialize=False)
-    a = w.load_candidates("user_profiles.csv")
+    # a = w.load_candidates("user_profiles.csv")
+    b = w.load_jobs("job_descriptions.csv")
+    print(b)
