@@ -108,9 +108,10 @@ def w2v_resume_filter(users_fname, jobs_fname, debiased=False):
 def main():
     """ Main method """
     user_fname = "user_profiles.csv"
-    jobs_fname = "dummy.csv"
+    jobs_fname = "job_descriptions.csv"
     w2v_resume_filter(users_fname=user_fname, jobs_fname=jobs_fname, debiased=False)
     w2v_resume_filter(users_fname=user_fname, jobs_fname=jobs_fname, debiased=True)
+
 
 if __name__ == "__main__":
     main()
