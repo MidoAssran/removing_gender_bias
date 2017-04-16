@@ -1,13 +1,14 @@
 from bs4 import BeautifulSoup
+import copy
 from random import randint
 import sexmachine.detector as gender
 import urllib2
 import unicodedata
 
-base_url = "http://www.indeed.com/resumes/data-science?q=data+science&co=CA"
-NUMBER_OF_LISTINGS = 100 # modify this value to get more data
+base_url = "https://www.indeed.com/resumes?q=software&l=victoria"
+NUMBER_OF_LISTINGS = 10000 # modify this value to get more data
 
-d = gender.Detector()
+# d = gender.Detector()
 
 def get_gender():
 	# gender = d.get_gender(name)
@@ -44,23 +45,9 @@ def get_personal_info(candidate_data):
 	if(candidate_data['gender'] == 'female'):
 		return female_keywords
 
-def scrape_from_all_pages():
-	json = {}
-	list_to_return = []
-	i = 0
-	increment_page = '&start=' + str(i)
-	while(i<NUMBER_OF_LISTINGS):
-		url_to_pass = base_url + increment_page
-		increment_page = '&start=' + str(i)
-		soup = BeautifulSoup(urllib2.urlopen(base_url+increment_page).read(), 'html.parser')
-		results = soup.find_all('li', attrs={'data-tn-component': 'resume-search-result'})
-		json = scrape_data(results)
-		i = i + 50
-		list_to_return.append(json)
-	return list_to_return
-
 def scrape_data(results):
 	json_data = {}
+	json_list = []
 	for x in results:
 	    # BSc
 	    education = x.find('div', attrs={'class': "education"})
@@ -88,13 +75,38 @@ def scrape_data(results):
 	    # Get name
 	    # name = x.find('div', attrs={'class': "app_name"})
 	    # json_data['name'] = name
-	    # print name
+	    # ` name
 
 		# Get gender
 	    json_data['gender'] = get_gender()
 
 	    json_data['personal_info'] = get_personal_info(json_data)
-	    return json_data
+	    json_data_to_add = copy.copy(json_data)
+	    json_list.append(json_data_to_add)
+	    # print '------------'
+	    # print x
+	    # print json_data
+	    # print '------------'
+	    json_data.clear()
+	return json_list
+
+def scrape_from_all_pages():
+	json = {}
+	list_to_return = []
+	i = 0
+	increment_page = '&co=CA&start=' + str(i)
+	while(i<NUMBER_OF_LISTINGS):
+		increment_page = '&co=CA&start=' + str(i)
+		url_to_pass = base_url + increment_page
+		try:
+			soup = BeautifulSoup(urllib2.urlopen(url_to_pass).read(), 'html.parser')
+		except:
+			return list_to_return
+		results = soup.find_all('li', attrs={'data-tn-component': 'resume-search-result'})
+		list_json = scrape_data(results)
+		i = i + 50
+		list_to_return.append(list_json)
+	return list_to_return
 
 def has_bachelors(education):
 	if education is None:
@@ -135,4 +147,4 @@ def has_work_experience(experience):
 	else:
 		return 0
 
-scrape_from_all_pages()
+#scrape_from_all_pages()
