@@ -10,10 +10,10 @@ def al_otaibi_resume_filter(users_fname, jobs_fname):
 
     # Load users
     users = w2vrf.load_candidates(users_fname)
-    user_profiles, user_genders = users['candidates'], users['genders']
-    for i, user in enumerate(user_profiles):
-        print(user)
-        user_profiles[i] = user[:8]
+    user_genders = users['genders']
+    user_profiles = []
+    for user in users['candidates']:
+        user_profiles.append(user[:8])
     user_vectors = user_profiles
 
     # Load jobs
@@ -62,10 +62,10 @@ def w2v_resume_filter(users_fname, jobs_fname, debiased=False):
 
     # Load users
     users = w2vrf.load_candidates(users_fname)
-    user_profiles, user_genders = users['candidates'], users['genders']
-    for i, user in enumerate(user_profiles):
-        print(user)
-        user_profiles[i] = user[8:]
+    user_genders = users['genders']
+    user_profiles = []
+    for user in users['candidates']:
+        user_profiles.append(user[8:])
     user_vectors = [w2vrf.get_word_centroid_vec(u) for u in user_profiles]
 
     # Load jobs
