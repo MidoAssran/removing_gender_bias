@@ -14,15 +14,16 @@ class W2VResumeFilter:
     HD_W2V_PATH = "./word2vec/GoogleNews-vectors-negative300-hard-debiased.bin.gz"
     W2V_PATH = "./word2vec/GoogleNews-vectors-negative300.bin.gz"
 
-    def __init__(self, debiased=False):
+    def __init__(self, debiased=False, initialize=True):
         """
         Constructor
         :param debiased: Whether to load the debiased word2vec or not
         """
-        if debiased:
-            self.model = KeyedVectors.load_word2vec_format(W2VResumeFilter.HD_W2V_PATH, binary=True)
-        else:
-            self.model = KeyedVectors.load_word2vec_format(W2VResumeFilter.W2V_PATH, binary=True)
+        if initialize:
+            if debiased:
+                self.model = KeyedVectors.load_word2vec_format(W2VResumeFilter.HD_W2V_PATH, binary=True)
+            else:
+                self.model = KeyedVectors.load_word2vec_format(W2VResumeFilter.W2V_PATH, binary=True)
 
 
     def get_word_centroid_vec(self, doc):
@@ -56,7 +57,7 @@ class W2VResumeFilter:
         for candidate in candidates:
             scores.append(distance.cosine(candidate, job))
 
-        # Index list of best candidates sorted by descending angle
+        # Index list of best candidates sorted by descending cosine(angle)
         ranks = sorted(range(len(scores)), key=lambda k: scores[k], reverse=True)
 
         return ranks
@@ -116,18 +117,37 @@ class W2VResumeFilter:
     def load_candidates(self, filename):
         """ Load the jobs from the target file """
 
-        # For now just return dummy list
-        candidates = [
-            ["she", "she", "she", "computer", "science", "Harvard"],
-            ["he", "he", "he", "computer", "science", "Harvard"],
-            ["she", "she", "computer", "science", "Harvard"],
-            ["he", "he", "computer", "science", "Harvard"],
-            ["she", "computer", "science", "Harvard"],
-        ]
+        def decode(candidate):
+            """ Decode the encoded part of the candidate string """
+            candidate = list(candidate)
 
-        candidate_genders = [
-            "F", "M", "F", "M", "F"
-        ]
+            if int(candidate[0]) != "0":
+                candidate.append("Masters")
+
+            if int(candidate[1]) != "0":
+                candidate.append("Bachelors")
+
+            if int(candidate[2]) != "0":
+                candidate.append("Technology")
+
+            if int(candidate[3]) != "0":
+                candidate.append("Experience")
+
+            if int(candidate[4]) != "0":
+                candidate.append("Experience")
+
+            return candidate
+
+        candidates = np.genfromtxt(filename, delimiter=",", dtype="str")
+        candidate_genders = []
+        for candidate in candidates:
+
+            candidate = decode(candidate)
+
+            if "female" in candidate:
+                candidate_genders.append("female")
+            else:
+                candidate_genders.append("male")
 
         return {"candidates": candidates, "genders": candidate_genders}
 
@@ -175,4 +195,6 @@ def main():
     np.savetxt("jaccard_ranks.csv", c, delimiter=",")
 
 if __name__ == "__main__":
-    main()
+    # main()
+    w = W2VResumeFilter(debiased=False, initialize=False)
+    a = w.load_candidates("user_profiles.csv")
