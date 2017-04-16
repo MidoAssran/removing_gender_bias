@@ -1,7 +1,10 @@
 from bs4 import BeautifulSoup
 import copy
+import csv
+import itertools
 import numpy as np
 from random import randint
+import random
 import sexmachine.detector as gender
 import urllib2
 import unicodedata
@@ -36,11 +39,13 @@ def get_job_description():
 			return list_to_return
 		results = soup.find_all('div', attrs={'class': 'row result'})
 		list_titles = get_job_titles(results)
-		write_to_csv('job_descriptions.csv', list_titles)
+		list_to_return.append(list_titles)
+		#write_to_csv('job_descriptions.csv', list_titles)
 		i = i + 10
+	return list_to_return
 
-get_job_description()
-#write_to_csv('job_descriptions.csv', results)
+def get_technical_keywords(technical_keywords):
+	return random.sample(technical_keywords,5)
 
 def get_gender():
 	# gender = d.get_gender(name)
@@ -72,10 +77,20 @@ female_keywords = ['her', 'she', 'She', 'woman', 'women', 'wife',
 					'hers', 'filly', 'Actress']
 
 def get_personal_info(candidate_data):
+	first_rand_int = randint(0,10)
+	second_rand_int = randint(11,20)
+	third_rand_int = randint(21,30)
+	fourth_rand_int = randint(31,43)
 	if(candidate_data['gender'] == 'male'):
-		return male_keywords
+		return [male_keywords[first_rand_int],
+		         male_keywords[second_rand_int],
+		         male_keywords[third_rand_int],
+		         male_keywords[fourth_rand_int]]
 	if(candidate_data['gender'] == 'female'):
-		return female_keywords
+		return [female_keywords[first_rand_int],
+		         female_keywords[second_rand_int],
+		         female_keywords[third_rand_int],
+		         female_keywords[fourth_rand_int]]
 
 def scrape_data(results):
 	json_data = {}
@@ -113,12 +128,17 @@ def scrape_data(results):
 	    json_data['gender'] = get_gender()
 
 	    json_data['personal_info'] = get_personal_info(json_data)
+
+	    technical_keywords = []
+        with open('job_descriptions.csv', 'rb') as f:
+            reader = csv.reader(f)
+            technical_keywords = list(reader)
+	    json_data['technical_keywords'] = get_technical_keywords(list(itertools.chain.from_iterable(technical_keywords)))
+	    print '----------------'
+	    print json_data
+	    print '----------------'
 	    json_data_to_add = copy.copy(json_data)
 	    json_list.append(json_data_to_add)
-	    # print '------------'
-	    # print x
-	    # print json_data
-	    # print '------------'
 	    json_data.clear()
 	return json_list
 
@@ -179,4 +199,4 @@ def has_work_experience(experience):
 	else:
 		return 0
 
-#scrape_from_all_pages()
+scrape_from_all_pages()

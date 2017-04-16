@@ -48,6 +48,8 @@ def get_gender(resume_data):
 def get_personal_info(resume_data):
 	return resume_data['personal_info']
 
+def get_technical_background(resume_data):
+	return resume_data['technical_keywords']
 
 def construct_candidate_skills(resume_data):
 	print resume_data
@@ -59,8 +61,9 @@ def construct_candidate_skills(resume_data):
 		work_experience = has_work_experience(resume_data)
 		english_skills = has_english_skills(resume_data)
 		oracle_skills = has_oracle_skills(resume_data)
+
 		candidate_info = [masters,bachelors, tech_major, worked_in_tech, work_experience,english_skills, oracle_skills, get_gender(resume_data)]
-		return candidate_info + get_personal_info(resume_data)
+		return candidate_info + get_personal_info(resume_data) + get_technical_background(resume_data)
 
 all_candidates = scrape_from_all_pages()
 candidates_list = []
@@ -74,5 +77,5 @@ def write_to_csv(fileName, candidates):
 	with open(fileName, 'a') as file_handle:
 		np.savetxt(file_handle, np.asarray(candidates), delimiter=",", fmt="%s")
 
-write_to_csv('user_profiles.csv', candidates_list)
+write_to_csv('updated_user_profiles.csv', candidates_list)
 # TODO: Add "load_alotaibi_users, load_alotaibi_jobs"
