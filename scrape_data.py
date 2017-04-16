@@ -9,7 +9,7 @@ import sexmachine.detector as gender
 import urllib2
 import unicodedata
 
-base_url = "https://www.indeed.com/resumes?q=software&l=victoria"
+base_url = "https://www.indeed.com/resumes?q=data+science"
 NUMBER_OF_LISTINGS = 10000 # modify this value to get more data
 
 # d = gender.Detector()

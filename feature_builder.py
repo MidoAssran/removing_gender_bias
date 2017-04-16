@@ -61,7 +61,6 @@ def construct_candidate_skills(resume_data):
 		work_experience = has_work_experience(resume_data)
 		english_skills = has_english_skills(resume_data)
 		oracle_skills = has_oracle_skills(resume_data)
-
 		candidate_info = [masters,bachelors, tech_major, worked_in_tech, work_experience,english_skills, oracle_skills, get_gender(resume_data)]
 		return candidate_info + get_personal_info(resume_data) + get_technical_background(resume_data)
 
