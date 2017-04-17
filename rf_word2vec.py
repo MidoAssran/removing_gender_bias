@@ -43,7 +43,8 @@ class W2VResumeFilter:
 
             if wcm is None:
                 wcm = vec
-            wcm += vec
+            else:
+                wcm += vec
 
         wcm /= float(len(doc))
         return wcm
@@ -57,7 +58,8 @@ class W2VResumeFilter:
         """
         scores = []
         for candidate in candidates:
-            scores.append(candidate.dot(job))
+            c, j = np.asarray(candidate), np.asarray(job)
+            scores.append(c.dot(j))
             # scores.append(distance.cosine(candidate, job))
 
         # Index list of best candidates sorted by descending cosine(angle)
@@ -126,19 +128,25 @@ class W2VResumeFilter:
             candidate = list(candidate)
 
             if int(candidate[0]) != "0":
-                candidate.append("Masters")
+                candidate.append("master")
 
             if int(candidate[1]) != "0":
-                candidate.append("Bachelors")
+                candidate.append("bachelor")
 
             if int(candidate[2]) != "0":
-                candidate.append("Technology")
+                candidate.append("technology")
 
             if int(candidate[3]) != "0":
-                candidate.append("Experience")
+                candidate.append("experience")
 
             if int(candidate[4]) != "0":
-                candidate.append("Experience")
+                [candidate.append("experience") for i in range(int(candidate[4]))]
+
+            if int(candidate[5]) != "0":
+                [candidate.append("english") for i in range(int(candidate[4]))]
+
+            if int(candidate[6]) != "0":
+                candidate.append("database")
 
             return candidate
 
