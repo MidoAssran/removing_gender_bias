@@ -18,7 +18,6 @@ def al_otaibi_resume_filter(users_fname, jobs_fname):
 
     # Load jobs
     job_profiles = w2vrf.load_jobs(jobs_fname)
-    # job_vectors = [w2vrf.get_word_centroid_vec(j) for j in job_profiles]
     job_vectors = [np.ones(7) for j in job_profiles]
 
 
@@ -107,7 +106,7 @@ def w2v_resume_filter(users_fname, jobs_fname, debiased=False):
 
 def main():
     """ Main method """
-    user_fname = "user_profiles.csv"
+    user_fname = "updated_user_profiles.csv"
     jobs_fname = "job_descriptions.csv"
     w2v_resume_filter(users_fname=user_fname, jobs_fname=jobs_fname, debiased=False)
     w2v_resume_filter(users_fname=user_fname, jobs_fname=jobs_fname, debiased=True)
