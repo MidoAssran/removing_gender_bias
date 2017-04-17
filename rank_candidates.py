@@ -46,12 +46,12 @@ def al_otaibi_resume_filter(users_fname, jobs_fname):
     bg = [[user_genders[i] for i in job_rank] for job_rank in euclidean_job_ranks]
     c = np.asarray(jaccard_job_ranks, dtype=int)
     cg = [[user_genders[i] for i in job_rank] for job_rank in jaccard_job_ranks]
-    np.savetxt("./data/_cosine_genders_alotaibi_II.csv", ag, delimiter=",", fmt="%s")
-    np.savetxt("./data/_euclidean_genders_alotaibi_II.csv", bg, delimiter=",", fmt="%s")
-    np.savetxt("./data/_jaccard_genders_alotaibi_II.csv", cg, delimiter=",", fmt="%s")
-    np.savetxt("./data/_cosine_ranks_alotaibi_II.csv", a, delimiter=",", fmt="%s")
-    np.savetxt("./data/_euclidean_ranks_alotaibi_II.csv", b, delimiter=",", fmt="%s")
-    np.savetxt("./data/_jaccard_ranks_alotaibi_II.csv", c, delimiter=",", fmt="%s")
+    np.savetxt("./data/_cosine_genders_alotaibi.csv", ag, delimiter=",", fmt="%s")
+    np.savetxt("./data/_euclidean_genders_alotaibi.csv", bg, delimiter=",", fmt="%s")
+    np.savetxt("./data/_jaccard_genders_alotaibi.csv", cg, delimiter=",", fmt="%s")
+    np.savetxt("./data/_cosine_ranks_alotaibi.csv", a, delimiter=",", fmt="%s")
+    np.savetxt("./data/_euclidean_ranks_alotaibi.csv", b, delimiter=",", fmt="%s")
+    np.savetxt("./data/_jaccard_ranks_alotaibi.csv", c, delimiter=",", fmt="%s")
 
 
 def w2v_resume_filter(users_fname, jobs_fname, debiased=False):
@@ -98,19 +98,19 @@ def w2v_resume_filter(users_fname, jobs_fname, debiased=False):
     bg = [[user_genders[i] for i in job_rank] for job_rank in euclidean_job_ranks]
     c = np.asarray(jaccard_job_ranks, dtype=int)
     cg = [[user_genders[i] for i in job_rank] for job_rank in jaccard_job_ranks]
-    np.savetxt("./data/" + str(debiased) + "_cosine_ranks_g_II.csv", ag, delimiter=",", fmt="%s")
-    np.savetxt("./data/" + str(debiased) + "_euclidean_ranks_g_II.csv", bg, delimiter=",", fmt="%s")
-    np.savetxt("./data/" + str(debiased) + "_jaccard_ranks_g_II.csv", cg, delimiter=",", fmt="%s")
-    np.savetxt("./data/" + str(debiased) + "_cosine_ranks_II.csv", a, delimiter=",", fmt="%s")
-    np.savetxt("./data/" + str(debiased) + "_euclidean_ranks_II.csv", b, delimiter=",", fmt="%s")
-    np.savetxt("./data/" + str(debiased) + "_jaccard_ranks_II.csv", c, delimiter=",", fmt="%s")
+    np.savetxt("./data/" + str(debiased) + "_cosine_ranks_g.csv", ag, delimiter=",", fmt="%s")
+    np.savetxt("./data/" + str(debiased) + "_euclidean_ranks_g.csv", bg, delimiter=",", fmt="%s")
+    np.savetxt("./data/" + str(debiased) + "_jaccard_ranks_g.csv", cg, delimiter=",", fmt="%s")
+    np.savetxt("./data/" + str(debiased) + "_cosine_ranks.csv", a, delimiter=",", fmt="%s")
+    np.savetxt("./data/" + str(debiased) + "_euclidean_ranks.csv", b, delimiter=",", fmt="%s")
+    np.savetxt("./data/" + str(debiased) + "_jaccard_ranks.csv", c, delimiter=",", fmt="%s")
 
 def main():
     """ Main method """
-    user_fname = "updated_user_profiles.csv"
+    user_fname = "user_profiles.csv"
     jobs_fname = "job_descriptions.csv"
-    # w2v_resume_filter(users_fname=user_fname, jobs_fname=jobs_fname, debiased=False)
-    # w2v_resume_filter(users_fname=user_fname, jobs_fname=jobs_fname, debiased=True)
+    w2v_resume_filter(users_fname=user_fname, jobs_fname=jobs_fname, debiased=False)
+    w2v_resume_filter(users_fname=user_fname, jobs_fname=jobs_fname, debiased=True)
     al_otaibi_resume_filter(user_fname, jobs_fname)
 
 if __name__ == "__main__":

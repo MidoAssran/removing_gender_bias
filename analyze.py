@@ -4,14 +4,23 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 folder = "./data/"
-fnames = ["_cosine_genders_alotaibi.csv",
-          "_euclidean_genders_alotaibi.csv",
-          "_jaccard_genders_alotaibi.csv",
-          "True_euclidean_ranks_g.csv",
-          "False_euclidean_ranks_g.csv",
-          "True_cosine_ranks_g.csv",
-          "False_cosine_ranks_g.csv",
-          "False_jaccard_ranks_g.csv"]
+# fnames = ["_cosine_genders_alotaibi.csv",
+#           "_euclidean_genders_alotaibi.csv",
+#           "_jaccard_genders_alotaibi.csv",
+#           "True_euclidean_ranks_g.csv",
+#           "False_euclidean_ranks_g.csv",
+#           "True_cosine_ranks_g.csv",
+#           "False_cosine_ranks_g.csv",
+#           "False_jaccard_ranks_g.csv"]
+
+fnames = ["_cosine_genders_alotaibi_II.csv",
+          "_euclidean_genders_alotaibi_II.csv",
+          "_jaccard_genders_alotaibi_II.csv",
+          "True_euclidean_ranks_g_II.csv",
+          "False_euclidean_ranks_g_II.csv",
+          "True_cosine_ranks_g_II.csv",
+          "False_cosine_ranks_g_II.csv",
+          "False_jaccard_ranks_g_II.csv"]
 
 fnames_method = ["Baseline Cosine",
                  "Basline Euclidean",
@@ -25,7 +34,18 @@ fnames_method = ["Baseline Cosine",
 male = "male"
 female = "female"
 
-top_n_list = [1, 10, 100, 1000, 5000]
+top_n_list = np.arange(start=100, stop=5000, step=20)
+# top_n_list = [100,
+#               150, 200,
+#               250, 300,
+#               350, 400,
+#               450, 550,
+#               650, 800,
+#               850, 900,
+#               1000, 1200,
+#               1500, 2000,
+#               5000]
+
 def compute_results(top_n_results):
 
     # Loop through the top_n to compute
@@ -66,7 +86,7 @@ def compute_results(top_n_results):
 
     # return top_n_results
 
-def plot(results, c, t):
+def plot_bar(results, c, t):
     male_means = []
     male_stds = []
     female_means = []
@@ -119,9 +139,55 @@ def plot(results, c, t):
 
     plt.show()
 
-top_n_results = []
-compute_results(top_n_results)
+def get_ratio_per_method(results, n):
 
-for i, results in enumerate(top_n_results):
-    results = top_n_results[i]
-    plot(results, ['#4990E2', '#F16E69'], top_n_list[i])
+    f2m_lst = []
+    for method in results:
+        male_counts = [job[0] for job in method]
+        female_counts = [job[1] for job in method]
+        m_avg = np.mean(male_counts)
+        f_avg = np.mean(female_counts)
+        try:
+            f2m = float(f_avg) / float(m_avg)
+        except:
+            f2m = float(n)
+        f2m_lst.append(f2m)
+
+    return f2m_lst
+
+def make_bar(top_n_results):
+    for i, results in enumerate(top_n_results):
+        results = top_n_results[i]
+        plot_bar(results, ['#4990E2', '#F16E69'], top_n_list[i])
+def make_roc(top_n_results):
+
+    methods = []
+    for i in range(len(fnames_method)):
+        methods.append([])
+
+    for i, results in enumerate(top_n_results):
+        results = top_n_results[i]
+        ratios = get_ratio_per_method(results, top_n_list[i])
+        [methods[j].append(ratios[j]) for j in range(len(fnames_method))]
+
+    for i, method in enumerate(methods):
+        lbl = fnames_method[i]
+        x_axis = top_n_list
+        y_axis = method
+        plt.plot(x_axis, y_axis, linewidth=1.0,
+                 linestyle='-', label=lbl)
+
+    plt.ylabel('Female to Male ratios')
+    plt.xlabel('n (top-n threshold)')
+    plt.legend()
+    plt.show()
+
+def main():
+    """ Main method """
+    top_n_results = []
+    compute_results(top_n_results)
+    # make_bar(top_n_results)
+    make_roc(top_n_results)
+
+if __name__ == "__main__":
+    main()

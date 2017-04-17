@@ -127,25 +127,34 @@ class W2VResumeFilter:
             """ Decode the encoded part of the candidate string """
             candidate = list(candidate)
 
-            if int(candidate[0]) != "0":
+            if int(candidate[0]) != 0:
                 candidate.append("master")
+                candidate.append("science")
 
-            if int(candidate[1]) != "0":
+            if int(candidate[1]) != 0:
                 candidate.append("bachelor")
+                candidate.append("science")
 
-            if int(candidate[2]) != "0":
+            if int(candidate[2]) != 0:
+                candidate.append("technology")
+                candidate.append("science")
+                candidate.append("major")
+
+            if int(candidate[3]) != 0:
+                candidate.append("experience")
                 candidate.append("technology")
 
-            if int(candidate[3]) != "0":
-                candidate.append("experience")
-
-            if int(candidate[4]) != "0":
+            if int(candidate[4]) != 0:
+                [candidate.append("technology") for i in range(int(candidate[4]))]
                 [candidate.append("experience") for i in range(int(candidate[4]))]
+                [candidate.append("job") for i in range(int(candidate[4]))]
 
-            if int(candidate[5]) != "0":
+
+            if int(candidate[5]) != 0:
                 [candidate.append("english") for i in range(int(candidate[4]))]
 
-            if int(candidate[6]) != "0":
+            if int(candidate[6]) != 0:
+                candidate.append("oracle")
                 candidate.append("database")
 
             return candidate
