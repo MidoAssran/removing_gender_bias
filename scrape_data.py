@@ -9,10 +9,24 @@ import sexmachine.detector as gender
 import urllib2
 import unicodedata
 
-base_url = "https://www.indeed.com/resumes?q=data+science"
+base_url = "https://www.indeed.com/resumes?q=data+science" 
 NUMBER_OF_LISTINGS = 10000 # modify this value to get more data
 
-# d = gender.Detector()
+male_keywords = ['He', 'he', 'his', 'man', 'men', 'spokesman', 'himself', 'son',
+				'father', 'chairman', 'husband', 'guy', 'boy', 'king', 'Chairman', 'male', 'Man','lions',
+				'brothers', 'dad', 'sons', 'kings', 'Men', 'Bulls', 'boyfriend', 'Sir', 'King',
+				'businessman', 'Boys', 'grandfather', 'Father', 'uncle', 'Councilman', 'Boy', 'males',
+				'guy', 'congressman', 'dad', 'bull', 'businessmen', 'nephew', 'congressmen', 'prostate_cancer',
+				'fathers']
+
+female_keywords = ['her', 'she', 'She', 'woman', 'women', 'wife',
+					'mother', 'daughter', 'girls', 'girl', 'spokeswoman',
+					'female', 'Women', 'herself', 'lady', 'actress', 'mom',
+					'girlfriend', 'daughters', 'queen', 'Lady', 'sisters',
+					'mothers', 'grandmother', 'Woman', 'cousin', 'Ladies', 'Girls', 
+					'mum', 'Girl', 'Queens', 'queen', 'wives', 'widow', 'bride',
+					'aunt', 'lesbian', 'chariwoman', 'maiden', 'princess', 'niece',
+					'hers', 'filly', 'Actress']
 
 def write_to_csv(fileName, candidates):
 	with open(fileName, 'a') as file_handle:
@@ -40,7 +54,6 @@ def get_job_description():
 		results = soup.find_all('div', attrs={'class': 'row result'})
 		list_titles = get_job_titles(results)
 		list_to_return.append(list_titles)
-		#write_to_csv('job_descriptions.csv', list_titles)
 		i = i + 10
 	return list_to_return
 
@@ -48,33 +61,10 @@ def get_technical_keywords(technical_keywords):
 	return random.sample(technical_keywords,5)
 
 def get_gender():
-	# gender = d.get_gender(name)
-	# gender_string = unicodedata.normalize('NFKD',gender).encode('ascii','ignore')
-	# if gender_string == 'mostly_female' or gender_string == 'andy':
-	# 	return 'female'
-	# if gender_string == 'mostly_male':
-	# 	return 'male'
-	# return gender_string
 	random_int = randint(0,1)
 	if random_int == 0:
 		return 'female'
 	return 'male'
-
-male_keywords = ['He', 'he', 'his', 'man', 'men', 'spokesman', 'himself', 'son',
-				'father', 'chairman', 'husband', 'guy', 'boy', 'king', 'Chairman', 'male', 'Man','lions',
-				'brothers', 'dad', 'sons', 'kings', 'Men', 'Bulls', 'boyfriend', 'Sir', 'King',
-				'businessman', 'Boys', 'grandfather', 'Father', 'uncle', 'Councilman', 'Boy', 'males',
-				'guy', 'congressman', 'dad', 'bull', 'businessmen', 'nephew', 'congressmen', 'prostate_cancer',
-				'fathers']
-
-female_keywords = ['her', 'she', 'She', 'woman', 'women', 'wife',
-					'mother', 'daughter', 'girls', 'girl', 'spokeswoman',
-					'female', 'Women', 'herself', 'lady', 'actress', 'mom',
-					'girlfriend', 'daughters', 'queen', 'Lady', 'sisters',
-					'mothers', 'grandmother', 'Woman', 'cousin', 'Ladies', 'Girls', 
-					'mum', 'Girl', 'Queens', 'queen', 'wives', 'widow', 'bride',
-					'aunt', 'lesbian', 'chariwoman', 'maiden', 'princess', 'niece',
-					'hers', 'filly', 'Actress']
 
 def get_personal_info(candidate_data):
 	first_rand_int = randint(0,10)
@@ -119,11 +109,6 @@ def scrape_data(results):
 	    # Has oracle skill
 	    json_data['oracle_skills'] = randint(0,1)
 
-	    # Get name
-	    # name = x.find('div', attrs={'class': "app_name"})
-	    # json_data['name'] = name
-	    # ` name
-
 		# Get gender
 	    json_data['gender'] = get_gender()
 
@@ -134,9 +119,6 @@ def scrape_data(results):
             reader = csv.reader(f)
             technical_keywords = list(reader)
 	    json_data['technical_keywords'] = get_technical_keywords(list(itertools.chain.from_iterable(technical_keywords)))
-	    print '----------------'
-	    print json_data
-	    print '----------------'
 	    json_data_to_add = copy.copy(json_data)
 	    json_list.append(json_data_to_add)
 	    json_data.clear()
@@ -198,5 +180,3 @@ def has_work_experience(experience):
 		return 1
 	else:
 		return 0
-
-scrape_from_all_pages()

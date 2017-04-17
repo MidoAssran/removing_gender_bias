@@ -4,6 +4,8 @@ import itertools
 import random
 import numpy as np
 
+technical_keywords = []
+
 male_keywords = ['He', 'he', 'his', 'man', 'men', 'spokesman', 'himself', 'son',
 				'father', 'chairman', 'husband', 'guy', 'boy', 'king', 'Chairman', 'male', 'Man','lions',
 				'brothers', 'dad', 'sons', 'kings', 'Men', 'Bulls', 'boyfriend', 'Sir', 'King',
@@ -44,9 +46,6 @@ def get_technical_keywords(technical_keywords):
 def write_to_csv(fileName, candidates):
 	with open(fileName, 'a') as file_handle:
 		np.savetxt(file_handle, np.asarray(candidates), delimiter=",", fmt="%s")
-
-
-technical_keywords = []
 
 f = open("job_descriptions.csv", 'r')
 reader = csv.reader(f)
