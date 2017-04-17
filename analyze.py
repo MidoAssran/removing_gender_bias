@@ -4,23 +4,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 folder = "./data/"
-# fnames = ["_cosine_genders_alotaibi.csv",
-#           "_euclidean_genders_alotaibi.csv",
-#           "_jaccard_genders_alotaibi.csv",
-#           "True_euclidean_ranks_g.csv",
-#           "False_euclidean_ranks_g.csv",
-#           "True_cosine_ranks_g.csv",
-#           "False_cosine_ranks_g.csv",
-#           "False_jaccard_ranks_g.csv"]
-
-fnames = ["_cosine_genders_alotaibi_II.csv",
-          "_euclidean_genders_alotaibi_II.csv",
-          "_jaccard_genders_alotaibi_II.csv",
-          "True_euclidean_ranks_g_II.csv",
-          "False_euclidean_ranks_g_II.csv",
-          "True_cosine_ranks_g_II.csv",
-          "False_cosine_ranks_g_II.csv",
-          "False_jaccard_ranks_g_II.csv"]
+fnames = ["_cosine_genders_alotaibi.csv",
+          "_euclidean_genders_alotaibi.csv",
+          "_jaccard_genders_alotaibi.csv",
+          "True_euclidean_ranks_g.csv",
+          "False_euclidean_ranks_g.csv",
+          "True_cosine_ranks_g.csv",
+          "False_cosine_ranks_g.csv",
+          "False_jaccard_ranks_g.csv"]
 
 fnames_method = ["Baseline Cosine",
                  "Basline Euclidean",
