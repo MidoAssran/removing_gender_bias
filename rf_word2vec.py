@@ -37,6 +37,7 @@ class W2VResumeFilter:
         for wrd in doc:
             try:
                 vec = self.model[wrd]
+                vec /= np.linalg.norm(vec)
             except:
                 continue
 
@@ -198,7 +199,7 @@ def main():
 
 if __name__ == "__main__":
     # main()
-    w2vrf = W2VResumeFilter(debiased=False, initialize=False)
+    w2vrf = W2VResumeFilter(debiased=True, initialize=True)
     # a = w2vrf.load_candidates("updated_user_profiles.csv")
     # b = w2vrf.load_jobs("job_descriptions.csv")
 
@@ -210,9 +211,12 @@ if __name__ == "__main__":
             break
         user_profiles.append(user[7:])
 
-    job_profiles = w2vrf.load_jobs("job_descriptions.csv")
-    jaccard_job_ranks = []
-    for job_string in job_profiles:
-        ranks = w2vrf.jaccard_filter_candidates(user_profiles, job_string)
-        jaccard_job_ranks.append(ranks)
-        print("jaccard:", ranks)
+    model = w2vrf.model
+    print(np.linalg.norm(model[user_profiles[0][1]]))
+
+    # job_profiles = w2vrf.load_jobs("job_descriptions.csv")
+    # jaccard_job_ranks = []
+    # for job_string in job_profiles:
+    #     ranks = w2vrf.jaccard_filter_candidates(user_profiles, job_string)
+    #     jaccard_job_ranks.append(ranks)
+    #     print("jaccard:", ranks)
