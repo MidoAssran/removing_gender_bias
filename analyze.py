@@ -34,19 +34,7 @@ fnames_method = ["Baseline Cosine",
 male = "male"
 female = "female"
 
-top_n_list = np.arange(start=100, stop=5000, step=20)
-# top_n_list = [100,
-#               150, 200,
-#               250, 300,
-#               350, 400,
-#               450, 550,
-#               650, 800,
-#               850, 900,
-#               1000, 1200,
-#               1500, 2000,
-#               5000]
-
-def compute_results(top_n_results):
+def compute_results(top_n_results, top_n_list):
 
     # Loop through the top_n to compute
     for top_n in top_n_list:
@@ -64,27 +52,11 @@ def compute_results(top_n_results):
                 count = Counter(row_n)
                 m_count = count[male]
                 f_count = count[female]
-                # try:
-                #     m2f = float(m_count) / float(f_count)
-                # except:
-                #     m2f = 1.0
-                # jobs.append(m2f)
                 jobs.append((m_count, f_count))
 
             metrics.append(jobs)
 
-        # dict_scores = {}
-        # for i, jobs in enumerate(metrics):
-        #     method_name = fnames_method[i]
-        #     print(method_name)
-        #     avg = np.mean(jobs)
-        #     std = np.std(jobs)
-        #     dict_scores[method_name] = {"avg": avg, "std": std}
-        #     print("\t", avg, std)
-        # top_n_results.append(dict_scores)
         top_n_results.append(metrics)
-
-    # return top_n_results
 
 def plot_bar(results, c, t):
     male_means = []
@@ -124,19 +96,6 @@ def plot_bar(results, c, t):
 
     ax.legend((rects_1[0], rects_2[0]), ('Men', 'Women'))
 
-    # def autolabel(rects):
-    #     """
-    #     Attach a text label above each bar displaying its height
-    #     """
-    #     for rect in rects:
-    #         height = rect.get_height()
-    #         ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
-    #                 '%d' % int(height),
-    #                 ha='center', va='bottom')
-
-    # autolabel(rects_1)
-    # autolabel(rects_2)
-
     plt.show()
 
 def get_ratio_per_method(results, n):
@@ -155,11 +114,12 @@ def get_ratio_per_method(results, n):
 
     return f2m_lst
 
-def make_bar(top_n_results):
+def make_bar(top_n_results, top_n_list):
     for i, results in enumerate(top_n_results):
         results = top_n_results[i]
         plot_bar(results, ['#4990E2', '#F16E69'], top_n_list[i])
-def make_roc(top_n_results):
+
+def make_roc(top_n_results, top_n_list):
 
     methods = []
     for i in range(len(fnames_method)):
@@ -184,10 +144,15 @@ def make_roc(top_n_results):
 
 def main():
     """ Main method """
+    top_n_list = [100, 1000, 5000]
     top_n_results = []
-    compute_results(top_n_results)
-    # make_bar(top_n_results)
-    make_roc(top_n_results)
+    compute_results(top_n_results, top_n_list)
+    make_bar(top_n_results, top_n_list)
+
+    top_n_list = np.arange(start=100, stop=5000, step=20)
+    top_n_results = []
+    compute_results(top_n_results, top_n_list)
+    make_roc(top_n_results, top_n_list)
 
 if __name__ == "__main__":
     main()

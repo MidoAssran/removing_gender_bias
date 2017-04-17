@@ -18,7 +18,6 @@ def al_otaibi_resume_filter(users_fname, jobs_fname):
 
     # Load jobs
     job_profiles = w2vrf.load_jobs(jobs_fname)
-    # job_vectors = [w2vrf.get_word_centroid_vec(j) for j in job_profiles]
     job_vectors = [np.ones(7) for j in job_profiles]
 
 
