@@ -5,7 +5,6 @@ import itertools
 import numpy as np
 from random import randint
 import random
-import sexmachine.detector as gender
 import urllib2
 import unicodedata
 

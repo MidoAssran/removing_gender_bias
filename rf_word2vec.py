@@ -216,25 +216,4 @@ def main():
     np.savetxt("jaccard_ranks.csv", c, delimiter=",")
 
 if __name__ == "__main__":
-    # main()
     w2vrf = W2VResumeFilter(debiased=True, initialize=True)
-    # a = w2vrf.load_candidates("updated_user_profiles.csv")
-    # b = w2vrf.load_jobs("job_descriptions.csv")
-
-    # users = w2vrf.load_candidates("updated_user_profiles.csv")
-    # user_genders = users['genders']
-    # user_profiles = []
-    # for user in users['candidates']:
-    #     if len(user_profiles) == 10:
-    #         break
-    #     user_profiles.append(user[7:])
-
-    # model = w2vrf.model
-    # print(np.linalg.norm(model[user_profiles[0][1]]))
-
-    # job_profiles = w2vrf.load_jobs("job_descriptions.csv")
-    # jaccard_job_ranks = []
-    # for job_string in job_profiles:
-    #     ranks = w2vrf.jaccard_filter_candidates(user_profiles, job_string)
-    #     jaccard_job_ranks.append(ranks)
-    #     print("jaccard:", ranks)
