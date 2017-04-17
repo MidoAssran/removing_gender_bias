@@ -77,7 +77,7 @@ def plot(results, c, t):
         m_avg = np.mean(male_counts)
         m_std = np.std(male_counts)
         f_avg = np.mean(female_counts)
-        f_std = np.mean(female_counts)
+        f_std = np.std(female_counts)
         male_means.append(m_avg)
         female_means.append(f_avg)
         male_stds.append(m_std)

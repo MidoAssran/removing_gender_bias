@@ -57,7 +57,8 @@ class W2VResumeFilter:
         """
         scores = []
         for candidate in candidates:
-            scores.append(distance.cosine(candidate, job))
+            scores.append(candidate.dot(job))
+            # scores.append(distance.cosine(candidate, job))
 
         # Index list of best candidates sorted by descending cosine(angle)
         ranks = sorted(range(len(scores)), key=lambda k: scores[k], reverse=True)
@@ -203,16 +204,16 @@ if __name__ == "__main__":
     # a = w2vrf.load_candidates("updated_user_profiles.csv")
     # b = w2vrf.load_jobs("job_descriptions.csv")
 
-    users = w2vrf.load_candidates("updated_user_profiles.csv")
-    user_genders = users['genders']
-    user_profiles = []
-    for user in users['candidates']:
-        if len(user_profiles) == 10:
-            break
-        user_profiles.append(user[7:])
+    # users = w2vrf.load_candidates("updated_user_profiles.csv")
+    # user_genders = users['genders']
+    # user_profiles = []
+    # for user in users['candidates']:
+    #     if len(user_profiles) == 10:
+    #         break
+    #     user_profiles.append(user[7:])
 
-    model = w2vrf.model
-    print(np.linalg.norm(model[user_profiles[0][1]]))
+    # model = w2vrf.model
+    # print(np.linalg.norm(model[user_profiles[0][1]]))
 
     # job_profiles = w2vrf.load_jobs("job_descriptions.csv")
     # jaccard_job_ranks = []

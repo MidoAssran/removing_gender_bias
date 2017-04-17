@@ -110,7 +110,7 @@ def main():
     user_fname = "updated_user_profiles.csv"
     jobs_fname = "job_descriptions.csv"
     w2v_resume_filter(users_fname=user_fname, jobs_fname=jobs_fname, debiased=False)
-    # w2v_resume_filter(users_fname=user_fname, jobs_fname=jobs_fname, debiased=True)
+    w2v_resume_filter(users_fname=user_fname, jobs_fname=jobs_fname, debiased=True)
     # al_otaibi_resume_filter(user_fname, jobs_fname)
 
 if __name__ == "__main__":
